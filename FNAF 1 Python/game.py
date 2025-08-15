@@ -8,7 +8,7 @@ pygame.mixer.init()
 
 def start_game(night):
     sn.show_night(night)
-
+    time.sleep(2)
     hour = 12
     energy = 100
     energy_usage = 1

@@ -5,7 +5,6 @@ def play_menu_theme():
     pygame.init()
     pygame.mixer_music.load('sfx/main_menu.mp3')
     pygame.mixer_music.play(-1)
-    print("MUSICA")
 
 def show_menu(night):
     choice = ""

@@ -1,6 +1,9 @@
+import sys
+
 import pygame
 import game_AI as ai
 import game as game
+import os
 
 pygame.init()
 pygame.mixer.init()
@@ -12,6 +15,7 @@ light_up_off_right = "🌟 Light up right hall"
 pull_up_down_cam = "📷 Enter/leave cams"
 energy_usage = 0
 energy_usage_emoji = ""
+command = None
 
 office_ambience_sound = pygame.mixer.Sound('sfx/office_ambience.mp3')
 door_triggering_sound = pygame.mixer.Sound('sfx/door_triggering.ogg')
@@ -20,32 +24,22 @@ cam_pull_sound = pygame.mixer.Sound('sfx/cam_pull_up.ogg')
 cam_put_down_sound = pygame.mixer.Sound('sfx/cam_put_down.ogg')
 
 def convert_eu_to_emoji():
-    global energy_usage_emoji
-    match energy_usage:
-        case 0:
-            energy_usage_emoji = ""
-        case 1:
-            energy_usage_emoji = "⚡"
-        case 2:
-            energy_usage_emoji = "⚡⚡"
-        case 3:
-            energy_usage_emoji = "⚡⚡⚡"
-        case 4:
-            energy_usage_emoji = "⚡⚡⚡⚡"
-        case 5:
-            energy_usage_emoji = "⚡⚡⚡⚡⚡"
+    return "⚡" * energy_usage
 
-    return energy_usage_emoji
 
 def commands_menu(energy):
 
+    pygame.display.set_mode((1, 1))
     office_ambience_sound.play(-1)
     office_ambience_sound.set_volume(0.1)
 
+    if os.name == 'nt':  # Windows
+        os.system('cls')
+    else:  # Linux e macOS
+        os.system('clear')
+
     if energy > 0:
-        while True:
-            command = (
-input(f'''
+        print(f'''
 1 - {close_open_left}
 2 - {close_open_right}
 3 - {light_up_off_left}
@@ -53,22 +47,25 @@ input(f'''
 5 - {pull_up_down_cam}
 ENERGY: {energy}%
 {convert_eu_to_emoji()}
-'''))
+''')
 
-            match command:
-                case "1":
-                    trigger_left_door()
-                case "2":
-                    trigger_right_door()
-                case "3":
-                    light_left_door("pedro")
-                case "4":
-                    light_right_door("gabriel")
-                case "5":
-                    cam_pull()
-                case _:
-                    print("INVALID COMMAND")
-
+        while True:
+            for event in pygame.event.get():
+                match event.type:
+                    case pygame.KEYDOWN:
+                        match event.key:
+                            case pygame.K_1:
+                                trigger_left_door()
+                            case pygame.K_2:
+                                trigger_right_door()
+                            case pygame.K_3:
+                                light_left_door("pedro")
+                            case pygame.K_4:
+                                light_right_door("gabriel")
+                            case pygame.K_5:
+                                cam_pull()
+                            case _:
+                                print("INVALID COMMAND")
     else:
         game.power_out()
 
