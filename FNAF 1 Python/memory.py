@@ -1,7 +1,7 @@
-import game
+import game_events as events
 
 def new_game():
-    game.start_game(1)
+    events.start_game(1)
 
 def continuee(night):
-    game.start_game(night)
+    events.start_game(night)

@@ -1,5 +1,14 @@
-def is_at_left_window(animatronic):
-    print("")
+ANIMATRONICS = {
+    "freddy",
+    "bonnie",
+    "chica",
+    "foxy",
+    "golden_freddy"
+}
 
-def is_at_right_window(animatronic):
-    print(animatronic)
+def animatronic_on():
+    print("tamo on")
+
+def animatronic_off():
+    print("tamo off")
+
