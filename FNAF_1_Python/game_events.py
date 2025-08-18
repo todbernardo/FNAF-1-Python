@@ -5,10 +5,13 @@ import random as rand
 import show_texts as st
 import game_AI as ai
 import threading
+import os
 import jumpscares
 
 pygame.init()
 pygame.mixer.init()
+
+BASE_DIR = os.path.dirname(__file__)
 
 hour = 0
 energy = 100
@@ -19,7 +22,7 @@ def hours_count():
 
     now = pygame.time.get_ticks()
     elapsed = (now - start_time) // 1000
-    target_hour = min(elapsed // 130, 6)
+    target_hour = min(elapsed // 1, 6)
 
     if target_hour > hour:
         hour = target_hour
@@ -33,23 +36,21 @@ def start_game(night):
     st.show_nights(night)
     time.sleep(2)
 
-    if hour < 6:
-        ai.animatronic_on()
-    else:
-        ai.animatronic_off()
-        six_am()
-
     if energy > 0:
         cmds.commands_menu(energy)
     else:
         power_out()
     
 def six_am():
+    print("printou")
+
     global hour
     
     if hour == 6:
         def play_six_am_sound():
-            pygame.mixer.music.load('C:\FNAF 1 Python VSCode\FNAF-1-Python\FNAF 1 Python\sfx\six_am_sound.mp3')
+            global BASE_DIR
+
+            pygame.mixer.music.load(os.path.join(BASE_DIR, 'sfx', 'six_am_sound.mp3'))
             pygame.mixer.music.play()
             time.sleep(10)
             pygame.mixer.music.stop()
@@ -67,7 +68,9 @@ def is_at_right_window(animatronic):
     print(animatronic)
 
 def jumpscare(animatronic):
-    pygame.mixer.music.load('C:\FNAF 1 Python VSCode\FNAF-1-Python\FNAF 1 Python\sfx\static.ogg')
+    global BASE_DIR
+
+    pygame.mixer.music.load(os.path.join(BASE_DIR, 'sfx', 'static.ogg'))
     pygame.mixer.music.play()
     time.sleep(6.5)
     pygame.mixer.music.stop()
@@ -82,16 +85,17 @@ def jumpscare(animatronic):
         case "foxy":
             jumpscares.foxy_jumpscare()
         case "golden_freddy":
-            pygame.music.mixer.load('C:\FNAF 1 Python VSCode\FNAF-1-Python\FNAF 1 Python\sfx\golden_freddy_scream.mp3')
+            pygame.music.mixer.load(os.path.join(BASE_DIR, 'sfx', 'golden_freddy_scream.mp3'))
             pygame.music.mixer.play()
             time.sleep(6)
             pygame.music.mixer.stop()
 
 
 def power_out():
+    global BASE_DIR
 
-    power_outage = pygame.mixer.Sound('C:\FNAF 1 Python VSCode\FNAF-1-Python\FNAF 1 Python\sfx\power_outage.mp3')
-    freddys_song = pygame.mixer.Sound('C:/FNAF 1 Python VSCode/FNAF-1-Python/FNAF 1 Python/sfx/freddys_song.mp3')
+    power_outage = pygame.mixer.Sound(os.path.join(BASE_DIR, 'sfx', 'power_outage.mp3'))
+    freddys_song = pygame.mixer.Sound(os.path.join(BASE_DIR, 'sfx', 'freddys_song.mp3'))
 
     print("\033[H\033[2J")
     print("Power's out! ⚡💥")
@@ -108,14 +112,14 @@ def power_out():
     power_outage.stop()
     freddys_song.stop()
 
-    pygame.mixer.music.load('C:\FNAF 1 Python VSCode\FNAF-1-Python\FNAF 1 Python\sfx\jumpscare.mp3')
+    pygame.mixer.music.load(os.path.join(BASE_DIR, 'sfx', 'jumpscare.mp3'))
     time.sleep(2.5)
     pygame.mixer.music.play()
     jumpscares.freddy_jumpscare()
     time.sleep(1)
     pygame.mixer.music.stop()
 
-    pygame.mixer.music.load('C:\FNAF 1 Python VSCode\FNAF-1-Python\FNAF 1 Python\sfx\static.ogg')
+    pygame.mixer.music.load(os.path.join(BASE_DIR, 'sfx', 'static.ogg'))
     pygame.mixer.music.play()
     time.sleep(6.5)
     pygame.mixer.music.stop()
