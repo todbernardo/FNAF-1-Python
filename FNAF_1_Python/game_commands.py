@@ -13,7 +13,16 @@ close_open_right = "🚫 Close right door"
 light_up_off_left = "🌟 Light up left hall"
 light_up_off_right = "🌟 Light up right hall"
 pull_up_down_cam = "📷 Enter/leave cams"
+energy_bars = 0
 energy_usage = 0
+
+def drain_energy():
+    None
+
+def energy_consumption(night, energy):
+    match night:
+        case 1:
+            None
 
 left_door_controller = False
 right_door_controller = False
@@ -31,15 +40,15 @@ cam_put_down_sound = pygame.mixer.Sound(os.path.join(BASE_DIR, 'sfx', 'cam_put_d
 cam_moving_sound = pygame.mixer.Sound(os.path.join(BASE_DIR, 'sfx', 'cam_moving_sound.ogg'))
 
 def convert_eu_to_emoji():
-    match energy_usage:
+    match energy_bars:
         case 0:
-            return ""
-        case 1:
             return "🟩"
-        case 2:
+        case 1:
             return "🟩🟩"
-        case 3:
+        case 2:
             return "🟩🟩🟨"
+        case 3:
+            return "🟩🟩🟨🟥"
         case 4:
             return "🟩🟩🟨🟥"
 
@@ -52,7 +61,7 @@ def print_menu(energy, hour):
 3 - {light_up_off_left}
 4 - {light_up_off_right}
 5 - {pull_up_down_cam}
-ENERGY: {energy}%
+ENERGY: {energy / 10}%
 {convert_eu_to_emoji()}
 {hour} AM
 ''')
@@ -90,58 +99,58 @@ def commands_menu(energy):
     events.six_am()
 
 def trigger_left_door():
-    global left_door_controller, close_open_left, energy_usage
+    global left_door_controller, close_open_left, energy_bars
 
     if not left_door_controller:
         door_triggering_sound.play()
-        energy_usage += 1
+        energy_bars += 1
 
         close_open_left = "✅ Open left door"
         left_door_controller = True
     else:
         door_triggering_sound.play()
-        energy_usage -= 1
+        energy_bars -= 1
 
         close_open_left = "🚫 Close left door"
         left_door_controller = False
 ###################################################
 
 def trigger_right_door():
-    global right_door_controller, close_open_right, energy_usage
+    global right_door_controller, close_open_right, energy_bars
 
     if not right_door_controller :
         door_triggering_sound.play()
-        energy_usage += 1
+        energy_bars += 1
 
         close_open_right = "✅ Open right door"
         right_door_controller = True
     else:
         door_triggering_sound.play()
-        energy_usage -= 1
+        energy_bars -= 1
 
         close_open_right = "🚫 Close right door"
         right_door_controller = False
 ###################################################
 
 def light_left_door(animatronic):
-    global left_light_controller, light_up_off_left, right_light_controller, light_up_off_right, energy_usage
+    global left_light_controller, light_up_off_left, right_light_controller, light_up_off_right, energy_bars
 
     if not left_light_controller:
         light_triggering_sound.play()
-        energy_usage += 1
+        energy_bars += 1
 
         light_up_off_left = "⚫ Light off left hall"
 
         if right_light_controller == True:
             right_light_controller = False
             light_up_off_right = "🌟 Light up right hall"
-            energy_usage -= 1
+            energy_bars -= 1
 
         left_light_controller = True
 
     else:
         light_triggering_sound.stop()
-        energy_usage -= 1
+        energy_bars -= 1
 
         light_up_off_left = "🌟 Light up left hall"
         left_light_controller = False
@@ -152,23 +161,23 @@ def light_left_door(animatronic):
 ###################################################
 
 def light_right_door(animatronic):
-    global right_light_controller, light_up_off_right, left_light_controller, light_up_off_left, energy_usage
+    global right_light_controller, light_up_off_right, left_light_controller, light_up_off_left, energy_bars
 
     if not right_light_controller :
         light_triggering_sound.play()
-        energy_usage += 1
+        energy_bars += 1
 
         light_up_off_right = "⚫ Light off right hall"
 
         if left_light_controller == True:
             left_light_controller = False
             light_up_off_left = "🌟 Light up left hall"
-            energy_usage -= 1
+            energy_bars -= 1
 
         right_light_controller = True
     else:
         light_triggering_sound.stop()
-        energy_usage -= 1
+        energy_bars -= 1
 
         light_up_off_right = "🌟 Light up right hall"
         right_light_controller = False
@@ -214,21 +223,21 @@ Press the number to check the cam:
     sys.stdout.flush()
 
 def cam_pull(energy):
-    global cam_controller, energy_usage
+    global cam_controller, energy_bars
 
     if not cam_controller :
         print_cam_map()
         cam_pull_sound.play()
         cam_moving_sound.play()
         office_ambience_sound.set_volume(0.03)
-        energy_usage += 1
+        energy_bars += 1
         cam_controller = True
     else:
         cam_put_down_sound.play()
         cam_pull_sound.stop()
         cam_moving_sound.stop()
         office_ambience_sound.set_volume(0.1)
-        energy_usage -= 1
+        energy_bars -= 1
         cam_controller = False
         print_menu(energy, events.hours_count())
 

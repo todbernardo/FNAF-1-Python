@@ -14,9 +14,23 @@ pygame.mixer.init()
 BASE_DIR = os.path.dirname(__file__)
 
 hour = 0
-energy = 100
+energy = 999 
 start_time = pygame.time.get_ticks()
 
+def start_game(night):
+    print("\033[H\033[2J")
+
+    st.show_nights(night)
+    time.sleep(2)
+
+    if energy > 0:
+        cmds.commands_menu(energy)
+    else:
+        if hour < 6:
+            power_out()
+        else:
+            six_am()
+    
 def hours_count():
     global energy, hour, start_time
 
@@ -30,26 +44,17 @@ def hours_count():
     
     return hour
 
-def start_game(night):
-    print("\033[H\033[2J")
+def energy_consumption():
+    None
 
-    st.show_nights(night)
-    time.sleep(2)
-
-    if energy > 0:
-        cmds.commands_menu(energy)
-    else:
-        power_out()
-    
 def six_am():
-    print("printou")
-
     global hour
     
     if hour == 6:
         def play_six_am_sound():
             global BASE_DIR
 
+            cmds.office_ambience_sound.stop()
             pygame.mixer.music.load(os.path.join(BASE_DIR, 'sfx', 'six_am_sound.mp3'))
             pygame.mixer.music.play()
             time.sleep(10)
@@ -60,6 +65,9 @@ def six_am():
 
         animation_thread.start()
         sound_thread.start()
+        
+        animation_thread.join()
+        sound_thread.join()
         
 def is_at_left_window(animatronic):
     print(animatronic)
