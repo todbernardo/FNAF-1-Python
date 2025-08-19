@@ -14,7 +14,7 @@ pygame.mixer.init()
 BASE_DIR = os.path.dirname(__file__)
 
 hour = 0
-energy = 999 
+energy = 999
 start_time = pygame.time.get_ticks()
 
 def start_game(night):
@@ -36,7 +36,7 @@ def hours_count():
 
     now = pygame.time.get_ticks()
     elapsed = (now - start_time) // 1000
-    target_hour = min(elapsed // 1, 6)
+    target_hour = min(elapsed // 130, 6)
 
     if target_hour > hour:
         hour = target_hour

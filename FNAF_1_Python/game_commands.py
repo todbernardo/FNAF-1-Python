@@ -4,6 +4,8 @@ import pygame
 import game_AI as ai
 import os
 import game_events as events
+import cam_commands as cam_cmds
+import math
 
 pygame.init()
 pygame.mixer.init()
@@ -12,7 +14,6 @@ close_open_left = "🚫 Close left door"
 close_open_right = "🚫 Close right door"
 light_up_off_left = "🌟 Light up left hall"
 light_up_off_right = "🌟 Light up right hall"
-pull_up_down_cam = "📷 Enter/leave cams"
 energy_bars = 0
 energy_usage = 0
 
@@ -60,8 +61,8 @@ def print_menu(energy, hour):
 2 - {close_open_right}
 3 - {light_up_off_left}
 4 - {light_up_off_right}
-5 - {pull_up_down_cam}
-ENERGY: {energy / 10}%
+5 - 📷 Enter cams
+ENERGY: {math.floor(energy / 10)}%
 {convert_eu_to_emoji()}
 {hour} AM
 ''')
@@ -72,7 +73,7 @@ def commands_menu(energy):
     events.hours_count()
     pygame.display.set_mode((1, 1))
     office_ambience_sound.play(-1)
-    office_ambience_sound.set_volume(0.1)
+    office_ambience_sound.set_volume(0.07)
 
     print_menu(energy, events.hours_count())
 
@@ -191,7 +192,7 @@ def light_right_door(animatronic):
 def print_cam_map():
     print("\033[H\033[2J")
     sys.stdout.write('''
-Press the number to check the cam:
+Press 5 to leave cams:
                      
                             ┌───────┐
                             │CAM 1  │
@@ -211,11 +212,11 @@ Press the number to check the cam:
                      └──────┐  │             │     
                             │  │            ┌┘
             ┌───────┐    ┌───────┐     ┌───────┐
-            │CAM 5  │────│CAM 8  │     │CAM 10 │
+            │CAM E  │────│CAM A  │     │CAM C  │
             └───────┘    └───────┘     └───────┘
                              │              │ 
                          ┌───────┐     ┌───────┐
-                         │CAM 9  │     │CAM 11 │
+                         │CAM B  │     │CAM D  │
                          └───────┘     └───────┘
                                │   YOU   │
                                └─────────┘       
@@ -229,14 +230,15 @@ def cam_pull(energy):
         print_cam_map()
         cam_pull_sound.play()
         cam_moving_sound.play()
-        office_ambience_sound.set_volume(0.03)
-        energy_bars += 1
         cam_controller = True
+        energy_bars += 1
+        office_ambience_sound.set_volume(0.03)
+        cam_cmds.check_cam_inputs(energy)
     else:
         cam_put_down_sound.play()
         cam_pull_sound.stop()
         cam_moving_sound.stop()
-        office_ambience_sound.set_volume(0.1)
+        office_ambience_sound.set_volume(0.07)
         energy_bars -= 1
         cam_controller = False
         print_menu(energy, events.hours_count())
