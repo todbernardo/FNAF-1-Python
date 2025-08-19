@@ -220,7 +220,7 @@ Press 5 to leave cams:
                          └───────┘     └───────┘
                                │   YOU   │
                                └─────────┘       
-                        ''')
+''')
     sys.stdout.flush()
 
 def cam_pull(energy):

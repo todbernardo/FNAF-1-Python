@@ -6,15 +6,17 @@ import game_commands as cmds
 import game_events as events
 
 BASE_DIR = os.path.dirname(__file__)
+loop = True
 
 def check_cams(cam, animatronic):
     None
 
 def check_cam_inputs(energy):
     global BASE_DIR
+    global loop
     cam_swap = pygame.mixer.Sound(os.path.join(BASE_DIR, "sfx", "cam_swap.ogg"))
 
-    while True:
+    while loop == True:
         for event in pygame.event.get():
             if cmds.cam_controller == True:
                 if event.type == pygame.KEYDOWN:
@@ -30,7 +32,7 @@ def check_cam_inputs(energy):
                     elif event.key == pygame.K_e:
                         None
                     elif event.key == pygame.K_6:
-                        None
+                        sys.stdout.write("Cam disabled")
                     elif event.key == pygame.K_7:
                         None
                     elif event.key == pygame.K_a:
@@ -42,8 +44,6 @@ def check_cam_inputs(energy):
                     elif event.key == pygame.K_d:
                         None
                     elif event.key == pygame.K_5:
-                        print("cam_controller = " + str(cmds.cam_controller))
-                        cmds.cam_pull(energy)
-                    
-            
-
+                        loop = False
+    loop = True
+    cmds.cam_pull(energy)
