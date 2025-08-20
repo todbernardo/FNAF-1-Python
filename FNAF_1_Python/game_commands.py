@@ -35,7 +35,8 @@ BASE_DIR = os.path.dirname(__file__)
 
 office_ambience_sound = pygame.mixer.Sound(os.path.join(BASE_DIR, 'sfx', 'office_ambience.mp3'))
 door_triggering_sound = pygame.mixer.Sound(os.path.join(BASE_DIR, 'sfx', 'door_triggering.ogg'))
-light_triggering_sound = pygame.mixer.Sound(os.path.join(BASE_DIR, 'sfx', 'light_triggering.ogg'))
+left_light_triggering_sound = pygame.mixer.Sound(os.path.join(BASE_DIR, 'sfx', 'light_triggering.ogg'))
+right_light_triggering_sound = pygame.mixer.Sound(os.path.join(BASE_DIR, 'sfx', 'light_triggering.ogg'))
 cam_pull_sound = pygame.mixer.Sound(os.path.join(BASE_DIR, 'sfx', 'cam_pull_up.ogg'))
 cam_put_down_sound = pygame.mixer.Sound(os.path.join(BASE_DIR, 'sfx', 'cam_put_down.ogg'))
 cam_moving_sound = pygame.mixer.Sound(os.path.join(BASE_DIR, 'sfx', 'cam_moving_sound.ogg'))
@@ -89,10 +90,10 @@ def commands_menu(energy):
                         trigger_right_door()
                         print_menu(energy, events.hours_count())
                     elif event.key == pygame.K_3:
-                        light_left_door("") 
+                        light_left_door() 
                         print_menu(energy, events.hours_count())
                     elif event.key == pygame.K_4:
-                        light_right_door("")
+                        light_right_door()
                         print_menu(energy, events.hours_count())
                 if event.key == pygame.K_5:
                     cam_pull(energy)
@@ -133,60 +134,51 @@ def trigger_right_door():
         right_door_controller = False
 ###################################################
 
-def light_left_door(animatronic):
+def light_left_door():
     global left_light_controller, light_up_off_left, right_light_controller, light_up_off_right, energy_bars
 
     if not left_light_controller:
-        light_triggering_sound.play()
+        left_light_triggering_sound.play()
         energy_bars += 1
 
         light_up_off_left = "⚫ Light off left hall"
 
-        if right_light_controller == True:
-            right_light_controller = False
-            light_up_off_right = "🌟 Light up right hall"
-            energy_bars -= 1
+        if right_light_controller == True: light_right_door()
 
         left_light_controller = True
-
     else:
-        light_triggering_sound.stop()
+        left_light_triggering_sound.stop()
         energy_bars -= 1
 
         light_up_off_left = "🌟 Light up left hall"
         left_light_controller = False
 
-    if events.is_at_left_window(animatronic):
-        print(animatronic + " is at your left window ⚠️")
-
+    if events.is_at_left_window():
+        None
 ###################################################
 
-def light_right_door(animatronic):
+def light_right_door():
     global right_light_controller, light_up_off_right, left_light_controller, light_up_off_left, energy_bars
 
     if not right_light_controller :
-        light_triggering_sound.play()
+        right_light_triggering_sound.play()
         energy_bars += 1
 
         light_up_off_right = "⚫ Light off right hall"
 
-        if left_light_controller == True:
-            left_light_controller = False
-            light_up_off_left = "🌟 Light up left hall"
-            energy_bars -= 1
+        if left_light_controller == True: light_left_door()
 
         right_light_controller = True
     else:
-        light_triggering_sound.stop()
+        right_light_triggering_sound.stop()
         energy_bars -= 1
 
         light_up_off_right = "🌟 Light up right hall"
         right_light_controller = False
 
 
-    if events.is_at_right_window(animatronic):
-        print(animatronic + " is at your right window ⚠️")
-
+    if events.is_at_right_window():
+        None
 ###################################################
 
 def print_cam_map():
@@ -224,9 +216,16 @@ Press 5 to leave cams:
     sys.stdout.flush()
 
 def cam_pull(energy):
-    global cam_controller, energy_bars
+    global cam_controller, energy_bars, left_light_controller, right_light_controller
 
-    if not cam_controller :
+    if not cam_controller:
+        print("light_up_off_left = " + str(left_light_controller))
+        if left_light_controller == True:
+            light_left_door()
+
+        if right_light_controller == True:
+            light_right_door()
+
         print_cam_map()
         cam_pull_sound.play()
         cam_moving_sound.play()

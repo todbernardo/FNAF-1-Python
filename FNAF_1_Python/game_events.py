@@ -44,9 +44,21 @@ def hours_count():
     
     return hour
 
-def energy_consumption():
+def energy_bars_drain():
     None
 
+def energy_consumption(night):
+    match night:
+        case 2:
+            energy -= 1
+        case 3:
+            energy -= 1
+        case 4:
+            energy -= 1
+        case 5:
+            energy -= 1
+        case 6:
+            energy -= 1
 def six_am():
     global hour
     
@@ -69,11 +81,11 @@ def six_am():
         animation_thread.join()
         sound_thread.join()
         
-def is_at_left_window(animatronic):
-    print(animatronic)
+def is_at_left_window():
+    None
 
-def is_at_right_window(animatronic):
-    print(animatronic)
+def is_at_right_window():
+    None
 
 def jumpscare(animatronic):
     global BASE_DIR
