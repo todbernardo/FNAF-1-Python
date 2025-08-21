@@ -24,7 +24,7 @@ def start_game(night):
     time.sleep(2)
 
     if energy > 0:
-        cmds.commands_menu(energy)
+        cmds.commands_menu(energy, night)
     else:
         if hour < 6:
             power_out()
@@ -50,28 +50,31 @@ def energy_bars_drain(controllers):
             # energy_consumption()
             None
 
-def energy_consumption(seconds):
-    global energy
-    # while True:
-    if energy > 0:
-        energy -= 1
-        threading.Timer(seconds, energy_consumption, args=6).start()
-        print("arroz")
+DECREMENT_EVENT = pygame.USEREVENT + 1
 
-# energy_consumption(6)
+def energy_consumption(ms):
+    global energy, DECREMENT_EVENT
+    pygame.time.set_timer(DECREMENT_EVENT, ms)
+
+    if energy > 0:
+        for event in pygame.event.get():
+            if event.type == DECREMENT_EVENT:
+                energy -= 1
+                print(energy)
+    return energy
 
 def match_energy_consumption(night):
     match night:
         case 2:
-            energy_consumption(6)
+            energy_consumption(6000)
         case 3:
-            energy_consumption(5)
+            energy_consumption(5000)
         case 4:
-            energy_consumption(4)
+            energy_consumption(4000)
         case 5:
-            energy_consumption(3)
+            energy_consumption(3000)
         case 6:
-            energy_consumption(3)
+            energy_consumption(3000)
             
 def six_am():
     global hour

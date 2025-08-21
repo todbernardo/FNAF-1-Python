@@ -61,14 +61,14 @@ ENERGY: {math.floor(energy / 10)}%
 ''')
     sys.stdout.flush()
 
-def commands_menu(energy):
+def commands_menu(energy, night):
 
     events.hours_count()
     pygame.display.set_mode((1, 1))
     office_ambience_sound.play(-1)
     office_ambience_sound.set_volume(0.07)
 
-    print_menu(energy, events.hours_count())
+    print_menu(events.match_energy_consumption(night), events.hours_count())
 
     while events.hours_count() < 6:
         events.hours_count()
