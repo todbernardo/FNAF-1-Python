@@ -17,14 +17,6 @@ light_up_off_right = "🌟 Light up right hall"
 energy_bars = 0
 energy_usage = 0
 
-def drain_energy():
-    None
-
-def energy_consumption(night, energy):
-    match night:
-        case 1:
-            None
-
 left_door_controller = False
 right_door_controller = False
 left_light_controller = False

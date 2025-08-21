@@ -33,6 +33,12 @@ CAM = {
     11 # d
 }
 
+def movement_timer(animatronic):
+    match animatronic.name:
+        case "Bonnie": 
+            None
+
+
 def increase_ai_level(hour, night):
     global freddy, bonnie, chica, foxy
 

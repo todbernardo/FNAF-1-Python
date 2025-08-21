@@ -44,21 +44,35 @@ def hours_count():
     
     return hour
 
-def energy_bars_drain():
-    None
+def energy_bars_drain(controllers):
+    for controller in controllers:
+        if controller == True:
+            # energy_consumption()
+            None
 
-def energy_consumption(night):
+def energy_consumption(seconds):
+    global energy
+    # while True:
+    if energy > 0:
+        energy -= 1
+        threading.Timer(seconds, energy_consumption, args=6).start()
+        print("arroz")
+
+# energy_consumption(6)
+
+def match_energy_consumption(night):
     match night:
         case 2:
-            energy -= 1
+            energy_consumption(6)
         case 3:
-            energy -= 1
+            energy_consumption(5)
         case 4:
-            energy -= 1
+            energy_consumption(4)
         case 5:
-            energy -= 1
+            energy_consumption(3)
         case 6:
-            energy -= 1
+            energy_consumption(3)
+            
 def six_am():
     global hour
     
