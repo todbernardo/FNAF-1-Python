@@ -14,7 +14,7 @@ pygame.mixer.init()
 BASE_DIR = os.path.dirname(__file__)
 
 hour = 0
-energy = 999
+energy = 99.9
 start_time = pygame.time.get_ticks()
 
 def start_game(night):
@@ -36,7 +36,7 @@ def hours_count():
 
     now = pygame.time.get_ticks()
     elapsed = (now - start_time) // 1000
-    target_hour = min(elapsed // 130, 6)
+    target_hour = min(elapsed // 90, 6)
 
     if target_hour > hour:
         hour = target_hour
@@ -49,32 +49,6 @@ def energy_bars_drain(controllers):
         if controller == True:
             # energy_consumption()
             None
-
-DECREMENT_EVENT = pygame.USEREVENT + 1
-
-def energy_consumption(ms):
-    global energy, DECREMENT_EVENT
-    pygame.time.set_timer(DECREMENT_EVENT, ms)
-
-    if energy > 0:
-        for event in pygame.event.get():
-            if event.type == DECREMENT_EVENT:
-                energy -= 1
-                print(energy)
-    return energy
-
-def match_energy_consumption(night):
-    match night:
-        case 2:
-            energy_consumption(6000)
-        case 3:
-            energy_consumption(5000)
-        case 4:
-            energy_consumption(4000)
-        case 5:
-            energy_consumption(3000)
-        case 6:
-            energy_consumption(3000)
             
 def six_am():
     global hour
@@ -138,7 +112,7 @@ def power_out():
     print("Power's out! ⚡💥")
     
     power_outage.play()
-    power_noise_time = rand.randint(5, 7)
+    power_noise_time = rand.randint(6, 9)
     time.sleep(power_noise_time)
     pygame.mixer.music.stop()
 

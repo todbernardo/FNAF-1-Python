@@ -1,4 +1,5 @@
 import random as rand
+import pygame
 
 class Animatronic:
     def __init__(self, name, cam, ai_level):
@@ -33,11 +34,25 @@ CAM = {
     11 # d
 }
 
+MOVEMENT_EVENT = pygame.USEREVENT + 1
+def movement_attempt(animatronic, ms):
+    pygame.time.set_timer(MOVEMENT_EVENT, ms)
+    for event in pygame.event.get():
+        if event == MOVEMENT_EVENT:
+            movement_chance = rand.randint(1, 20)
+            if movement_chance <= animatronic.ai_level:
+                print("Mover")
+
 def movement_timer(animatronic):
     match animatronic.name:
+        case "Freddy":
+            movement_attempt(freddy, 3020)
         case "Bonnie": 
-            None
-
+            movement_attempt(bonnie, 4970)
+        case "Chica":
+            movement_attempt(chica, 4980)
+        case "Foxy":
+            movement_attempt(foxy, 5010)
 
 def increase_ai_level(hour, night):
     global freddy, bonnie, chica, foxy

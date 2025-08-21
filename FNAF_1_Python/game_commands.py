@@ -24,6 +24,7 @@ right_light_controller = False
 cam_controller = False
 
 BASE_DIR = os.path.dirname(__file__)
+DECREMENT_EVENT = pygame.USEREVENT + 1
 
 office_ambience_sound = pygame.mixer.Sound(os.path.join(BASE_DIR, 'sfx', 'office_ambience.mp3'))
 door_triggering_sound = pygame.mixer.Sound(os.path.join(BASE_DIR, 'sfx', 'door_triggering.ogg'))
@@ -55,7 +56,7 @@ def print_menu(energy, hour):
 3 - {light_up_off_left}
 4 - {light_up_off_right}
 5 - 📷 Enter cams
-ENERGY: {math.floor(energy / 10)}%
+ENERGY: {math.floor(energy)}%
 {convert_eu_to_emoji()}
 {hour} AM
 ''')
@@ -68,9 +69,22 @@ def commands_menu(energy, night):
     office_ambience_sound.play(-1)
     office_ambience_sound.set_volume(0.07)
 
-    print_menu(events.match_energy_consumption(night), events.hours_count())
+    ms = 6000
+    if night == 1: ms = 10000
+    elif night == 2: ms = 8600
+    elif night == 3: ms = 8400
+    elif night == 4: ms = 8000
+    elif night >= 5: ms = 7600
 
-    while events.hours_count() < 6:
+    pygame.time.set_timer(DECREMENT_EVENT, ms)
+    
+    while events.hours_count() < 6 and energy > 0:
+        for event in pygame.event.get():
+            if event.type == DECREMENT_EVENT:
+                if energy > 0:
+                    energy -= 1
+                print_menu(energy, events.hours_count())
+
         events.hours_count()
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -89,7 +103,7 @@ def commands_menu(energy, night):
                         print_menu(energy, events.hours_count())
                 if event.key == pygame.K_5:
                     cam_pull(energy)
-
+    
     events.six_am()
 
 def trigger_left_door():
